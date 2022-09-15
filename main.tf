@@ -52,24 +52,6 @@ resource "vault_aws_secret_backend_role" "EC2_Creator" {
 EOF
 }
 
-resource "vault_mount" "AWS_kv" {
-  path        = "awsDynamicSecret"
-  type        = "kv"
-  options     = { version = "1" }
-  description = "Mounting the dynamic aws secrets."
-}
-
-resource "vault_kv_secret" "AWSsecrets" {
-  path = "${vault_mount.AWS_kv.path}/secret"
-  data_json = jsonencode(
-  {
-    tmp_access_key = "${data.vault_aws_access_credentials.creds.access_key}",
-    tmp_secret_key = "${data.vault_aws_access_credentials.creds.secret_key}"
-  }
-  )
-}
-
-
 output "awsDynamicAccessKey" {
   value = data.vault_aws_access_credentials.creds.access_key
 }
@@ -80,8 +62,8 @@ output "awsDynamicSecretKey" {
 provider "aws" {
   //access_key = data.vault_generic_secret.aws_keys.data["aws_access_key"]
   //secret_key = data.vault_generic_secret.aws_keys.data["aws_secret_key"]
-  access_key = data.vault_generic_secret.aws_keys.data["aws_access_key"]
-  secret_key = data.vault_generic_secret.aws_keys.data["aws_secret_key"]
+  access_key = data.vault_aws_access_credentials.creds.access_key
+  secret_key = data.vault_aws_access_credentials.creds.secret_key
   region     = "us-east-1"
 }
 
