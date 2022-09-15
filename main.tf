@@ -32,7 +32,6 @@ resource "vault_aws_secret_backend" "aws" {
 data "vault_aws_access_credentials" "creds" {
   backend = "aws-path" //path to aws_secret_backend
   role    = vault_aws_secret_backend_role.EC2_Creator.name
-  type    = "sts"
 }
 // The IAM User Role that actually creates the EC2 instance
 resource "vault_aws_secret_backend_role" "EC2_Creator" {
