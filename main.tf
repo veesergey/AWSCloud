@@ -7,12 +7,7 @@ terraform {
   }
 }
 
-output "awsDynamicAccessKey" {
-  value = data.vault_aws_access_credentials.tempAWScreds.access_key
-}
-output "awsDynamicSecretKey" {
-  value = data.vault_aws_access_credentials.tempAWScreds.secret_key
-}
+
 
 provider "vault" {
   address = "https://327d-98-62-197-204.ngrok.io"
@@ -33,9 +28,14 @@ resource "vault_aws_secret_backend" "aws" {
   max_lease_ttl_seconds     = "600"
 }
 
+// Reads the AWS Credentials for the EC2_Creator Role
+data "vault_aws_access_credentials" "tempAWScreds" {
+  backend = "aws-dynamic-secrets"
+  role    = vault_aws_secret_backend_role.EC2_Creator.name
+}
 // The IAM User Role that actually creates the EC2 instance
 resource "vault_aws_secret_backend_role" "EC2_Creator" {
-  backend = "aws-path"
+  backend = "aws-dynamic-secrets"
   name    = "EC2Creator-role"
   credential_type = "iam_user"
   policy_document = <<EOF
@@ -54,15 +54,16 @@ resource "vault_aws_secret_backend_role" "EC2_Creator" {
 EOF
 }
 
-// Reads the AWS Credentials for the EC2_Creator Role
-data "vault_aws_access_credentials" "tempAWScreds" {
-  backend = vault_aws_secret_backend.aws.path
-  role    = vault_aws_secret_backend_role.EC2_Creator.name
+output "awsDynamicAccessKey" {
+  value = data.vault_aws_access_credentials.tempAWScreds.access_key
+}
+output "awsDynamicSecretKey" {
+  value = data.vault_aws_access_credentials.tempAWScreds.secret_key
 }
 
 provider "aws" {
-  access_key = awsDynamicAccessKey.value
-  secret_key = awsDynamicSecretKey.value
+  access_key = data.vault_aws_access_credentials.tempAWScreds.access_key
+  secret_key = data.vault_aws_access_credentials.tempAWScreds.secret_key
   region     = "us-east-1"
 }
 
