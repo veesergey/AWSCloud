@@ -36,7 +36,7 @@ data "vault_aws_access_credentials" "creds" {
 }
 // The IAM User Role that actually creates the EC2 instance
 resource "vault_aws_secret_backend_role" "EC2_Creator" {
-  backend = "aws-dynamic-secrets"
+  backend = "aws-path"
   name    = "EC2Creator-role"
   credential_type = "iam_user"
   policy_document = <<EOF
@@ -63,10 +63,9 @@ output "awsDynamicSecretKey" {
 }
 
 provider "aws" {
-  //access_key = data.vault_generic_secret.aws_keys.data["aws_access_key"]
-  //secret_key = data.vault_generic_secret.aws_keys.data["aws_secret_key"]
-  token        = data.vault_aws_access_credentials.creds.token
-  region       = "us-east-1"
+  access_key = data.vault_generic_secret.aws_keys.data["aws_access_key"]
+  secret_key = data.vault_generic_secret.aws_keys.data["aws_secret_key"]
+  region     = "us-east-1"
 }
 
 # Specifies whats being created. In this case its a linux EC2 instance.
