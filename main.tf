@@ -8,22 +8,13 @@ terraform {
 }
 
 provider "vault" {
-  address = "https://3658-98-62-197-204.ngrok.io"
+  address = "https://5cae-98-62-197-204.ngrok.io"
   add_address_to_env = "true"
 }
 
 data "vault_generic_secret" "aws_keys"{
   path = "secret/aws"
 }
-
-resource "aws_launch_template" "aws_launch_template" {
-  metadata_options {
-    http_endpoint               = "enabled"
-    http_tokens                 = "optional"
-    http_put_response_hop_limit = 2
-  }
-}
-
 
 // Secret Engine, Issues the temporary AWS access key and secret key.
 // Encrypted permanent keys are pulled from Vault and used to generate temporary keys.
@@ -69,10 +60,10 @@ output "awsDynamicSecretKey" {
 }
 
 provider "aws" {
-  //access_key = data.vault_generic_secret.aws_keys.data["aws_access_key"]
-  //secret_key = data.vault_generic_secret.aws_keys.data["aws_secret_key"]
-  access_key = data.vault_aws_access_credentials.creds.access_key
-  secret_key = data.vault_aws_access_credentials.creds.secret_key
+  access_key = data.vault_generic_secret.aws_keys.data["aws_access_key"]
+  secret_key = data.vault_generic_secret.aws_keys.data["aws_secret_key"]
+  //access_key = data.vault_aws_access_credentials.creds.access_key
+  //secret_key = data.vault_aws_access_credentials.creds.secret_key
   region     = "us-east-1"
 }
 
