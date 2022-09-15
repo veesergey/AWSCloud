@@ -16,11 +16,14 @@ data "vault_generic_secret" "aws_keys"{
   path = "secret/aws"
 }
 
-metadata_options {
+resource "aws_launch_template" "aws_launch_template" {
+  metadata_options {
     http_endpoint               = "enabled"
     http_tokens                 = "optional"
     http_put_response_hop_limit = 2
   }
+}
+
 
 // Secret Engine, Issues the temporary AWS access key and secret key.
 // Encrypted permanent keys are pulled from Vault and used to generate temporary keys.
