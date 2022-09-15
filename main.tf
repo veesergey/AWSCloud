@@ -60,10 +60,10 @@ output "awsDynamicSecretKey" {
 }
 
 provider "aws" {
-  //access_key = data.vault_generic_secret.aws_keys.data["aws_access_key"]
-  //secret_key = data.vault_generic_secret.aws_keys.data["aws_secret_key"]
-  access_key = data.vault_aws_access_credentials.creds.access_key
-  secret_key = data.vault_aws_access_credentials.creds.secret_key
+  access_key = data.vault_generic_secret.aws_keys.data["aws_access_key"]
+  secret_key = data.vault_generic_secret.aws_keys.data["aws_secret_key"]
+  //access_key = data.vault_aws_access_credentials.creds.access_key
+  //secret_key = data.vault_aws_access_credentials.creds.secret_key
   region     = "us-east-1"
 }
 
