@@ -29,9 +29,10 @@ resource "vault_aws_secret_backend" "aws" {
 }
 
 // Reads the AWS Credentials for the EC2_Creator Role
-data "vault_aws_access_credentials" "tempAWScreds" {
-  backend = "aws-dynamic-secrets"
+data "vault_aws_access_credentials" "creds" {
+  backend = "aws-path" //path to aws_secret_backend
   role    = vault_aws_secret_backend_role.EC2_Creator.name
+  type    = "sts"
 }
 // The IAM User Role that actually creates the EC2 instance
 resource "vault_aws_secret_backend_role" "EC2_Creator" {
@@ -55,16 +56,17 @@ EOF
 }
 
 output "awsDynamicAccessKey" {
-  value = data.vault_aws_access_credentials.tempAWScreds.access_key
+  value = data.vault_aws_access_credentials.creds.access_key
 }
 output "awsDynamicSecretKey" {
-  value = data.vault_aws_access_credentials.tempAWScreds.secret_key
+  value = data.vault_aws_access_credentials.creds.secret_key
 }
 
 provider "aws" {
-  access_key = data.vault_generic_secret.aws_keys.data["aws_access_key"]
-  secret_key = data.vault_generic_secret.aws_keys.data["aws_secret_key"]
-  region     = "us-east-1"
+  //access_key = data.vault_generic_secret.aws_keys.data["aws_access_key"]
+  //secret_key = data.vault_generic_secret.aws_keys.data["aws_secret_key"]
+  token        = data.vault_aws_access_credentials.creds.token
+  region       = "us-east-1"
 }
 
 # Specifies whats being created. In this case its a linux EC2 instance.
