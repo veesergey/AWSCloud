@@ -8,8 +8,8 @@ terraform {
 }
 
 provider "aws" {
-  access_key = data.vault_generic_secret.aws_keys.data["aws_access_key"]
-  secret_key = data.vault_generic_secret.aws_keys.data["aws_secret_key"]
+  access_key = data.vault_aws_access_credentials.tempAWScreds.access_key
+  secret_key = data.vault_aws_access_credentials.tempAWScreds.secret_key
   region     = "us-east-1"
 }
 
@@ -34,7 +34,7 @@ resource "vault_aws_secret_backend" "aws" {
 
 // The IAM User Role that actually creates the EC2 instance
 resource "vault_aws_secret_backend_role" "EC2_Creator" {
-  backend = vault_aws_secret_backend.aws.path
+  backend = "aws-path"
   name    = "EC2Creator-role"
   credential_type = "iam_user"
   policy_document = <<EOF
@@ -54,7 +54,7 @@ EOF
 }
 
 // Reads the AWS Credentials for the EC2_Creator Role
-data "vault_aws_access_credentials" "creds" {
+data "vault_aws_access_credentials" "tempAWScreds" {
   backend = vault_aws_secret_backend.aws.path
   role    = vault_aws_secret_backend_role.EC2_Creator.name
 }
