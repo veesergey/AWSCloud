@@ -63,8 +63,8 @@ resource "vault_kv_secret" "AWSsecrets" {
   path = "${vault_mount.AWS_kv.path}/secret"
   data_json = jsonencode(
   {
-    zip = "${data.vault_aws_access_credentials.creds.access_key}",
-    foo = "${data.vault_aws_access_credentials.creds.secret_key}"
+    tmp_access_key = "${data.vault_aws_access_credentials.creds.access_key}",
+    tmp_secret_key = "${data.vault_aws_access_credentials.creds.secret_key}"
   }
   )
 }
