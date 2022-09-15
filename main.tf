@@ -7,12 +7,6 @@ terraform {
   }
 }
 
-provider "aws" {
-  access_key = data.vault_aws_access_credentials.tempAWScreds.access_key
-  secret_key = data.vault_aws_access_credentials.tempAWScreds.secret_key
-  region     = "us-east-1"
-}
-
 output "awsDynamicAccessKey" {
   value = data.vault_aws_access_credentials.tempAWScreds.access_key
 }
@@ -64,6 +58,12 @@ EOF
 data "vault_aws_access_credentials" "tempAWScreds" {
   backend = vault_aws_secret_backend.aws.path
   role    = vault_aws_secret_backend_role.EC2_Creator.name
+}
+
+provider "aws" {
+  access_key = "${data.vault_aws_access_credentials.tempAWScreds.access_key}"
+  secret_key = "${data.vault_aws_access_credentials.tempAWScreds.secret_key}"
+  region     = "us-east-1"
 }
 
 # Specifies whats being created. In this case its a linux EC2 instance.
