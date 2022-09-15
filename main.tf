@@ -1,3 +1,18 @@
+terraform {
+  required_providers {
+    aws = {
+      source = "hashicorp/aws"
+      version = "4.30.0"
+    }
+  }
+}
+
+provider "aws" {
+  access_key = data.vault_aws_access_credentials.creds.access_key
+  secret_key = data.vault_aws_access_credentials.creds.secret_key
+  region     = "us-east-1"
+}
+
 provider "vault" {
   address = "https://9ef6-98-62-197-204.ngrok.io"
   add_address_to_env = "true"
@@ -42,12 +57,6 @@ EOF
 data "vault_aws_access_credentials" "creds" {
   backend = vault_aws_secret_backend.aws.path
   role    = vault_aws_secret_backend_role.EC2_Creator.name
-}
-
-provider "aws" {
-  access_key = data.vault_aws_access_credentials.creds.access_key
-  secret_key = data.vault_aws_access_credentials.creds.secret_key
-  region     = "us-east-1"
 }
 
 # Specifies whats being created. In this case its a linux EC2 instance.
