@@ -8,8 +8,8 @@ terraform {
 }
 
 provider "aws" {
-  access_key = data.vault_aws_access_credentials.creds.access_key
-  secret_key = data.vault_aws_access_credentials.creds.secret_key
+  access_key = "AKIAXVU67DJ6H5M3XVN7"
+  secret_key = "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"
   region     = "us-east-1"
 }
 
