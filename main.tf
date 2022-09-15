@@ -1,3 +1,13 @@
+terraform {
+  cloud {
+    organization = "veesergey"
+
+    workspaces {
+      name = "AWS-CLI"
+    }
+  }
+}
+
 provider "vault" {
   address = "https://9ef6-98-62-197-204.ngrok.io"
   add_address_to_env = "true"
