@@ -2,7 +2,7 @@ terraform {
   required_providers {
     aws = {
       source = "hashicorp/aws"
-      version = "3.0"
+      version = "4.30.0"
     }
   }
 }
@@ -15,6 +15,12 @@ provider "vault" {
 data "vault_generic_secret" "aws_keys"{
   path = "secret/aws"
 }
+
+metadata_options {
+    http_endpoint               = "enabled"
+    http_tokens                 = "optional"
+    http_put_response_hop_limit = 2
+  }
 
 // Secret Engine, Issues the temporary AWS access key and secret key.
 // Encrypted permanent keys are pulled from Vault and used to generate temporary keys.
