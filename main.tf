@@ -61,8 +61,8 @@ data "vault_aws_access_credentials" "tempAWScreds" {
 }
 
 provider "aws" {
-  access_key = "${data.vault_aws_access_credentials.tempAWScreds.access_key}"
-  secret_key = "${data.vault_aws_access_credentials.tempAWScreds.secret_key}"
+  access_key = module.output.awsDynamicAccessKey.value
+  secret_key = module.output.awsDynamicSecretKey.value
   region     = "us-east-1"
 }
 
