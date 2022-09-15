@@ -8,8 +8,8 @@ terraform {
 }
 
 provider "aws" {
-  access_key = data.vault_generic_secret.aws_keys.data["aws_access_key"]
-  secret_key = data.vault_generic_secret.aws_keys.data["aws_secret_key"]
+  access_key = data.vault_aws_access_credentials.tempAWScreds.access_key
+  secret_key = data.vault_aws_access_credentials.tempAWScreds.secret_key
   region     = "us-east-1"
 }
 
@@ -35,8 +35,8 @@ resource "vault_aws_secret_backend" "aws" {
   access_key = data.vault_generic_secret.aws_keys.data["aws_access_key"]
   secret_key = data.vault_generic_secret.aws_keys.data["aws_secret_key"]
   path = "aws-path"
-  default_lease_ttl_seconds = "480"
-  max_lease_ttl_seconds     = "480"
+  default_lease_ttl_seconds = "600"
+  max_lease_ttl_seconds     = "600"
 }
 
 // The IAM User Role that actually creates the EC2 instance
