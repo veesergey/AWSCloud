@@ -35,8 +35,8 @@ resource "vault_aws_secret_backend" "aws" {
   access_key = data.vault_generic_secret.aws_keys.data["aws_access_key"]
   secret_key = data.vault_generic_secret.aws_keys.data["aws_secret_key"]
   path = "aws-path"
-  default_lease_ttl_seconds = "120"
-  max_lease_ttl_seconds     = "240"
+  default_lease_ttl_seconds = "480"
+  max_lease_ttl_seconds     = "480"
 }
 
 // The IAM User Role that actually creates the EC2 instance
