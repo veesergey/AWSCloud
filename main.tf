@@ -4,6 +4,10 @@ terraform {
       source = "hashicorp/aws"
       version = "4.30.0"
     }
+    vault = {
+      source = "hashicorp/vault"
+      version = "3.8.2"
+    }
   }
 }
 
@@ -12,56 +16,14 @@ provider "vault" {
   add_address_to_env = "true"
 }
 
-data "vault_generic_secret" "aws_keys"{
-  path = "secret/aws"
-}
-
-// Secret Engine, Issues the temporary AWS access key and secret key.
-// Encrypted permanent keys are pulled from Vault and used to generate temporary keys.
-resource "vault_aws_secret_backend" "aws" {
-  access_key = data.vault_generic_secret.aws_keys.data["aws_access_key"]
-  secret_key = data.vault_generic_secret.aws_keys.data["aws_secret_key"]
-  path = "aws-path"
-  default_lease_ttl_seconds = "600"
-  max_lease_ttl_seconds     = "600"
-}
-
-// Reads the AWS Credentials for the EC2_Creator Role
+//The role is defined in vault, creates temporary credentials
 data "vault_aws_access_credentials" "creds" {
-  backend = vault_aws_secret_backend.aws.path
-  role    = vault_aws_secret_backend_role.EC2_Creator.name
-}
-// The IAM User Role that actually creates the EC2 instance
-resource "vault_aws_secret_backend_role" "EC2_Creator" {
-  backend = vault_aws_secret_backend.aws.path
-  name    = "EC2Creator-role"
-  credential_type = "iam_user"
-  policy_document = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Action": [
-        "iam:*", "ec2:*"
-      ],
-      "Resource": "*"
-    }
-  ]
-}
-EOF
-}
-
-output "awsDynamicAccessKey" {
-  value = data.vault_aws_access_credentials.creds.access_key
-}
-output "awsDynamicSecretKey" {
-  value = data.vault_aws_access_credentials.creds.secret_key
+  backend = "aws"
+  role    = "AWS-Deployment"
+  
 }
 
 provider "aws" {
-  //access_key = data.vault_generic_secret.aws_keys.data["aws_access_key"]
-  //secret_key = data.vault_generic_secret.aws_keys.data["aws_secret_key"]
   access_key = data.vault_aws_access_credentials.creds.access_key
   secret_key = data.vault_aws_access_credentials.creds.secret_key
   region     = "us-east-1"
