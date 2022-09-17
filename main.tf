@@ -19,7 +19,7 @@ provider "vault" {
 //The role is defined in vault, creates temporary credentials
 data "vault_aws_access_credentials" "creds" {
   backend = "aws"
-  role    = "AWS-Deployment"
+  role    = "aws-deploy"
   
 }
 
