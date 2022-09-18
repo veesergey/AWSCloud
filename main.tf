@@ -45,7 +45,7 @@ resource "aws_instance" "linux2" {
 
 resource "aws_s3_bucket" "theBucket" {
    bucket = "veesergey-An-S3-Bucket"
-   acl = "public"
+   acl = "private"
    versioning {
       enabled = true
    }
