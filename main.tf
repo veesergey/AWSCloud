@@ -44,12 +44,12 @@ resource "aws_instance" "linux2" {
 }
 
 resource "aws_s3_bucket" "theBucket" {
-   bucket = "veesergey-An-S3-Bucket"
+   bucket = "veesergey-s3bucket"
    versioning {
       enabled = true
    }
    tags = {
-     Name        = "VeesergeyBucket"
+     Name        = "veesergeyBucket"
      Environment = "DEV"
      Purpose     = "Testing"
    }
