@@ -12,7 +12,7 @@ terraform {
 }
 
 provider "vault" {
-  address = "https://5cae-98-62-197-204.ngrok.io"
+  address = "https://c797-98-62-197-204.ngrok.io"
   add_address_to_env = "true"
 }
 
