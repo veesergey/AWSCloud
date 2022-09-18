@@ -45,9 +45,7 @@ resource "aws_instance" "linux2" {
 
 resource "aws_s3_bucket" "theBucket" {
    bucket = "veesergey-s3bucket"
-   versioning {
-      enabled = true
-   }
+   
    tags = {
      Name        = "veesergeyBucket"
      Environment = "DEV"
@@ -58,6 +56,13 @@ resource "aws_s3_bucket" "theBucket" {
 resource "aws_s3_bucket_acl" "privateACL" {
   bucket = aws_s3_bucket.theBucket.id
   acl    = "private"
+}
+
+resource "aws_s3_bucket_versioning" "versioning_theBucket" {
+  bucket = aws_s3_bucket.theBucket.id
+  versioning_configuration {
+    status = "Enabled"
+  }
 }
 
 # This is the creation of the security group. There are two outbound rules that are being created.
