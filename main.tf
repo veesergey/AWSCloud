@@ -45,7 +45,6 @@ resource "aws_instance" "linux2" {
 
 resource "aws_s3_bucket" "theBucket" {
    bucket = "veesergey-An-S3-Bucket"
-   acl = "private"
    versioning {
       enabled = true
    }
@@ -56,6 +55,10 @@ resource "aws_s3_bucket" "theBucket" {
    }
 }
 
+resource "aws_s3_bucket_acl" "privateACL" {
+  bucket = aws_s3_bucket.theBucket.id
+  acl    = "private"
+}
 
 # This is the creation of the security group. There are two outbound rules that are being created.
 # One rule allows all internet traffic connection, the other allows SSH connections
