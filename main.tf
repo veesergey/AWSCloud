@@ -44,7 +44,7 @@ resource "aws_instance" "linux2" {
 }
 
 resource "aws_s3_bucket" "mainBucket" {
-  bucket = "theMainBucket"
+  bucket = "veesergey-theMainBucket"
 
   tags = {
     Name        = "Vitaliys Development Bucket"
