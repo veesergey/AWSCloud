@@ -43,13 +43,17 @@ resource "aws_instance" "linux2" {
     }
 }
 
-resource "aws_s3_bucket" "mainBucket" {
-  bucket = "veesergey-theMainBucket"
-
-  tags = {
-    Name        = "Vitaliys Development Bucket"
-    Environment = "Dev"
-  }
+resource "aws_s3_bucket" "theBucket" {
+   bucket = "veesergey-An-S3-Bucket"
+   acl = "public"
+   versioning {
+      enabled = true
+   }
+   tags = {
+     Name        = "VeesergeyBucket"
+     Environment = "DEV"
+     Purpose     = "Testing"
+   }
 }
 
 
