@@ -43,7 +43,6 @@ resource "aws_instance" "linux2" {
     }
 }
 
-
 # This is the creation of the security group. There are two outbound rules that are being created.
 # One rule allows all internet traffic connection, the other allows SSH connections
 resource "aws_security_group" "ssh_http" {
