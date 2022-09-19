@@ -43,28 +43,6 @@ resource "aws_instance" "linux2" {
     }
 }
 
-resource "aws_s3_bucket" "theBucket" {
-   bucket = "veesergey-s3bucket"
-   
-   tags = {
-     Name        = "veesergeyBucket"
-     Environment = "DEV"
-     Purpose     = "Testing"
-   }
-}
-
-resource "aws_s3_bucket_acl" "privateACL" {
-  bucket = aws_s3_bucket.theBucket.id
-  acl    = "private"
-}
-
-resource "aws_s3_bucket_versioning" "versioning_theBucket" {
-  bucket = aws_s3_bucket.theBucket.id
-  versioning_configuration {
-    status = "Enabled"
-  }
-}
-
 # This is the creation of the security group. There are two outbound rules that are being created.
 # One rule allows all internet traffic connection, the other allows SSH connections
 resource "aws_security_group" "ssh_http" {
